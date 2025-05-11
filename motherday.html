@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>母亲节快乐!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff8ba7',
+                        secondary: '#ffc2d1',
+                        accent: '#ffd43b',
+                        light: '#fde8e9',
+                        dark: '#8d99ae',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .animate-float {
+                animation: float 6s ease-in-out infinite;
+            }
+            .animate-sparkle {
+                animation: sparkle 2s ease-in-out infinite;
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes sparkle {
+            0% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.6; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-light min-h-screen overflow-hidden">
+    <!-- 星星背景 -->
+    <div id="stars" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- 主容器 -->
+    <div class="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 z-10">
+        <!-- 标题 -->
+        <h1 id="message" class="text-[clamp(2rem,8vw,3.5rem)] font-bold text-dark text-center mb-8 transition-all duration-500 animate-float">妈妈，您辛苦了!</h1>
+
+        <!-- 爱心容器 -->
+        <div id="hearts-container" class="w-full h-full absolute inset-0 pointer-events-none z-0"></div>
+
+        <!-- 署名 -->
+        <p class="text-[clamp(1.2rem,4vw,1.8rem)] font-italic text-dark mt-12 animate-float" style="animation-delay: 0.5s;">永远爱您的孩子</p>
+
+        <!-- 音乐控制按钮 -->
+        <button id="music-toggle" class="fixed bottom-6 right-6 bg-primary/80 hover:bg-primary text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none">
+            <i class="fa fa-music"></i>
+        </button>
+    </div>
+
+    <script>
+        // 创建音频元素
+        const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+        audio.loop = true;
+
+        // 音乐控制
+        document.getElementById('music-toggle').addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+                this.innerHTML = '<i class="fa fa-pause"></i>';
+            } else {
+                audio.pause();
+                this.innerHTML = '<i class="fa fa-music"></i>';
+            }
+        });
+
+        // 祝福消息
+        const messages = [
+            "妈妈，您辛苦了!",
+            "母亲节快乐!",
+            "我爱您!",
+            "谢谢您的爱和关怀",
+            "您是世界上最好的妈妈!"
+        ];
+        let currentMessageIndex = 0;
+
+        // 切换祝福消息
+        function changeMessage() {
+            const messageElement = document.getElementById('message');
+            messageElement.style.opacity = 0;
+            setTimeout(() => {
+                currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+                messageElement.textContent = messages[currentMessageIndex];
+                messageElement.style.opacity = 1;
+            }, 500);
+        }
+
+        // 每3秒切换一次消息
+        setInterval(changeMessage, 3000);
+
+        // 创建星星背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starsCount = 100;
+
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                const size = Math.random() * 3 + 1;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 3 + 2;
+
+                star.style.position = 'absolute';
+                star.style.left = `${left}%`;
+                star.style.top = `${top}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.backgroundColor = '#ffffff';
+                star.style.borderRadius = '50%';
+                star.style.boxShadow = `0 0 ${size*2}px #ffffff`;
+                star.style.animation = `sparkle ${duration}s ease-in-out ${delay}s infinite`;
+
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 创建爱心函数
+        function createHeart() {
+            const heartsContainer = document.getElementById('hearts-container');
+            const heart = document.createElement('div');
+
+            // 随机大小和位置
+            const size = Math.random() * 80 + 40;
+            const left = Math.random() * 100;
+            const startOpacity = Math.random() * 0.5 + 0.5;
+
+            // 随机颜色
+            const colors = ['#ff6b81', '#ff8ba7', '#ffb3c1', '#ffc2d1'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            // 设置爱心样式
+            heart.style.position = 'absolute';
+            heart.style.left = `${left}%`;
+            heart.style.bottom = '-50px';
+            heart.style.width = `${size}px`;
+            heart.style.height = `${size}px`;
+            heart.style.opacity = startOpacity;
+            heart.style.animation = `float ${Math.random() * 10 + 10}s linear forwards`;
+
+            // 使用CSS绘制爱心形状
+            heart.innerHTML = `
+                <div style="position: relative; width: 100%; height: 100%;">
+                    <div style="position: absolute; top: 0; left: 0; width: 50%; height: 80%; background: ${color}; border-radius: 50% 50% 0 0; transform: rotate(-45deg); transform-origin: 100% 100%;"></div>
+                    <div style="position: absolute; top: 0; right: 0; width: 50%; height: 80%; background: ${color}; border-radius: 50% 50% 0 0; transform: rotate(45deg); transform-origin: 0 100%;"></div>
+                    <div style="position: absolute; bottom: 0; left: 25%; width: 50%; height: 40%; background: ${color}; transform: rotate(0deg);"></div>
+                </div>
+            `;
+
+            // 添加到容器
+            heartsContainer.appendChild(heart);
+
+            // 动画结束后移除
+            setTimeout(() => {
+                heart.remove();
+            }, 20000);
+        }
+
+        // 定时创建爱心
+        setInterval(createHeart, 500);
+
+        // 初始化
+        createStars();
+        createHeart(); // 立即创建一个爱心
+    </script>
+</body>
+</html>
